@@ -1,0 +1,121 @@
+body {
+    background-color: rgb(255, 250, 243);
+}
+
+.running-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.running-text {
+    margin: 0;
+    color: rgb(36, 10, 8);
+    white-space: nowrap;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    /* 	transform: translatex(); */
+
+    animation: run 15s linear infinite;
+    font-size: medium;
+
+    /* 	
+	animation-name: run;
+	animation-duration: 15s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite; 
+*/
+}
+
+
+@keyframes run {
+    0% {
+        transform: translatex(100%);
+    }
+
+    100% {
+        transform: translatex(-2000px);
+    }
+}
+
+.invoice .card {
+    border-radius: 20px !important;
+    /* box-shadow: 10px 40px 40px 10px rgba(0, 0, 0, 0.13) !important; */
+}
+
+.invoice .card-header {
+    background-color: rgba(5, 138, 138, 0.521);
+    font-size: x-small;
+    font-weight: 600;
+}
+
+.card-title {
+    font-size: x-large;
+    font-weight: 900;
+    align-items: center;
+}
+
+.product-name {
+    font-size: x-small;
+    font-weight: 560;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.product-detail {
+    font-size: xx-small;
+}
+
+.accordion {
+    --bs-accordion-border-radius: 20px !important;
+}
+
+.accordion-header {
+    background-color: rgba(27, 139, 139, 0.521);
+    border-radius: 20px;
+}
+
+.accordion-item {
+    border-radius: 20px;
+}
+
+.accordion-button {
+    background-color: rgba(253, 253, 253, 0);
+    font-size: medium;
+    font-weight: 700;
+}
+
+.invoice-detail {
+    background-color: rgb(240, 255, 247);
+}
+
+.invoice-detail h3 {
+    font-size: x-small;
+    margin-bottom: 2px;
+    font-weight: 700 !important;
+}
+
+.alert {
+    box-shadow: 10px 40px 40px 10px rgba(0, 0, 0, 0.13) !important;
+}
+
+.alert h3 {
+    font-size: medium;
+}
+
+.accordion-item {
+    box-shadow: 10px 40px 40px 10px rgba(0, 0, 0, 0.13) !important;
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Apply the animation to the element */
+.fade-out {
+    animation: fade-out 0.8s ease-out forwards;
+}
