@@ -419,6 +419,11 @@ var KTEcommerceMyOrders = function () {
                 width: 50,
             },
             {
+                field: 'whatsapp',
+                title: 'No HP',
+                width: 50,
+            },
+            {
                 field: 'order_at',
                 title: 'Tanggal Pemesanan',
                 type: 'date',

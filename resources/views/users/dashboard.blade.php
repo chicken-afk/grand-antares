@@ -1,5 +1,48 @@
 @extends('users.main')
 
+@section('css')
+    <style>
+        .button-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .btn1 {
+            /* width: 100px; */
+            height: 30px;
+            position: relative;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: none;
+            background: #ffffff;
+            color: #3d3131;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: px;
+            cursor: pointer;
+        }
+
+        .btn1::before {
+            content: "";
+            position: absolute;
+            background: #3A98B9;
+            width: 100%;
+            height: 3px;
+            left: 0;
+            bottom: 0;
+            transform: scaleX(0);
+            transition: .5s ease-out;
+        }
+
+        .btn1:hover::before {
+            transform: scaleX(1);
+        }
+    </style>
+@endsection
+
 @section('header-content')
     <div class="container fillter-section">
         <div class="row">
@@ -11,6 +54,12 @@
                     <option value="{{ route('userPage', ['code' => $row['code'], 'category_id' => 'promo']) }}"
                         {{ $row['category_id'] == 'promo' ? 'selected' : null }}>
                         Promo</option>
+                    @foreach ($row['banners'] as $banner)
+                        <option
+                            {{ isset($row['banner_id']) ? ($row['banner_id'] == $banner->id ? 'selected' : null) : null }}
+                            value="{{ route('userPage', ['code' => $row['code'], 'banner_id' => $banner->id, 'banner' => 'true']) }}">
+                            {{ $banner->name }}</option>
+                    @endforeach
                     @foreach ($row['cat'] as $key => $value)
                         <option {{ $row['category_id'] == $value->id ? 'selected' : null }}
                             value="{{ route('userPage', ['code' => $row['code'], 'category_id' => $value->id]) }}">
@@ -27,6 +76,13 @@
     <div class="container">
         <div style="margin-top: 100px"></div>
         @php $c = 0; @endphp
+        @if (isset($row['banner_name']))
+            <div class="row">
+                <div class="col">
+                    <h3 class="category-title" style="font-size: 1.2rem ; margin-top : 10px">{{ $row['banner_name'] }}</h3>
+                </div>
+            </div>
+        @endif
         @foreach ($row['categories'] as $key => $value)
             @if ($row['categories'][$key]->products->count() != 0)
                 @php $c++ @endphp
@@ -40,18 +96,26 @@
                         <div class="col">
                             <h3 class="category-title">{{ $value->category_name }}</h3>
                         </div>
-                        <div class="col text-right" style="text-align: right">
-                            @if ($subCategories->count() > 0)
-                                <select name="subCategoryId" data-category-id="{{ $value->id }}"
-                                    data-menu-key="menu{{ $key }}" onchange="changeDataProduct(this)">
-                                    <option value="semua">Semua</option>
-                                    @foreach ($subCategories as $sub)
-                                        <option value="{{ $sub->id }}">{{ $sub->sub_category_name }}</option>
-                                    @endforeach
-                                </select>
-                            @endif
-                        </div>
                     </div>
+                    @if (\Request::get('category_id') || ($row['category_id'] == 'semua' && \Request::get('banner_id') == null))
+                        @if ($subCategories->count() > 0)
+                            <div class="row">
+                                <div class="col text-center">
+                                    <button name="subCategoryId" data-category-id="{{ $value->id }}"
+                                        data-menu-key="menu{{ $key }}" onclick="changeDataProduct(this)"
+                                        data-value="semua" class="btn1">Semua</button>
+                                </div>
+                                @foreach ($subCategories as $sub)
+                                    <div class="col text-center">
+                                        <button name="subCategoryId" data-category-id="{{ $value->id }}"
+                                            data-menu-key="menu{{ $key }}" onclick="changeDataProduct(this)"
+                                            data-value="{{ $sub->id }}"
+                                            class="btn1">{{ $sub->sub_category_name }}</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    @endif
 
                     <div id="menu{{ $key }}">
                         @foreach ($row['categories'][$key]->products as $val)
@@ -272,7 +336,10 @@
                 <div class="modal-body">
                     @forelse ($row['customer_services'] as $cs)
                         <div class="row">
-                            <div class="col-12 text-center">
+                            <div class="col-5 text-center">
+                                <span>{{ $cs->name }} : </span>
+                            </div>
+                            <div class="col-7">
                                 <a target="_blank" class="text-dark-75"
                                     href="https://wa.me/{{ $cs->whatsapp }}">+{{ $cs->whatsapp }}</a>
                             </div>
@@ -492,22 +559,20 @@
             var menuKey = selectElement.dataset.menuKey;
 
             // Mendapatkan nilai yang dipilih dari elemen <select> menggunakan properti value
-            var selectedValue = selectElement.value;
+            var selectedValue = selectElement.dataset.value;
 
             // Menampilkan nilai-nilai yang telah diambil
             console.log('categoryId:', categoryId);
             console.log('menuKey:', menuKey);
             console.log('selectedValue:', selectedValue);
 
-            // Lakukan apa yang perlu Anda lakukan dengan data ini di sini
-            document.getElementById(`${menuKey}`).innerHTML = "";
 
             $.ajax({
                 url: `/user-product?sub_category_id=${selectedValue}&code=${code}&category_id=${categoryId}`,
                 type: "GET",
                 success: function(response) {
 
-                    console.log(response)
+                    // console.log(response)
                     if (response.status_code == 422) {
                         Swal.fire({
                             icon: 'Error',
@@ -516,6 +581,9 @@
                         })
                         return false;
                     }
+
+                    // Lakukan apa yang perlu Anda lakukan dengan data ini di sini
+                    document.getElementById(`${menuKey}`).innerHTML = "";
                     document.getElementById(`${menuKey}`).innerHTML = response;
                     return true;
                     // window.location = "/products"

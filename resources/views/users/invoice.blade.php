@@ -93,20 +93,12 @@
                         </div>
                     @endif
                     <div style="display: grid;grid-template-columns: 1fr 0.1fr 1fr; grid-gap: 1px;">
-                        <h5 class="mb-1" style="width: 7rem">Harga</h5>
-                        <h5 class="mb-1" style="width: 0.1rem">:</h5>
-                        <h5 class="mb-1"> Rp. {{ number_format($row['invoice']->charge_before_tax) }},-</h5>
-                    </div>
-                    <div style="display: grid;grid-template-columns: 1fr 0.1fr 1fr; grid-gap: 1px;">
-                        <h5 class="mb-1" style="width: 7rem">Pajak ({{ config('appsetting.tax') }}%)</h5>
-                        <h5 class="mb-1" style="width: 0.1rem">:</h5>
-                        <h5 class="mb-1"> Rp. {{ number_format($row['invoice']->tax) }},-</h5>
-                    </div>
-                    <div style="display: grid;grid-template-columns: 1fr 0.1fr 1fr; grid-gap: 1px;">
                         <h5 class="mb-1" style="width: 7rem">Harga Total</h5>
                         <h5 class="mb-1" style="width: 0.1rem">:</h5>
                         <h5 class="mb-1"> Rp. {{ number_format($row['invoice']->payment_charge) }},-</h5>
                     </div>
+                    <p class="text-right" style="font-size: 0.6rem; text-align:right">Harga Sudah termasuk service dan
+                        pajak 21%</p>
                     <h5 class="mb-0">Pesanan :</h5>
                     @foreach ($row['products'] as $key => $value)
                         <div class="line-1"></div>
@@ -190,14 +182,28 @@
             alert("Copied the text: " + copyText.value);
         }
 
-        jQuery(document).ready(function($) {
+        // jQuery(document).ready(function($) {
 
-            // Check if the modal element exists and the showModal variable is valid
-            let showModal = {{ $row['invoice']->is_kritik }}
-            if (typeof showModal !== 'undefined' && showModal === 0) {
-                $('#modalKritik').modal('show');
-            }
-        });
+        //     // Check if the modal element exists and the showModal variable is valid
+        //     let showModal = {{ $row['invoice']->is_kritik }}
+        //     if (typeof showModal !== 'undefined' && showModal === 0) {
+        //         $('#modalKritik').modal('show');
+        //     }
+        // });
+        var invoices = JSON.parse(localStorage.getItem("invoices") || "[]");
+        var newInvoice = `{{ \Request::get('invoice') }}`;
+
+        if (invoices.indexOf(newInvoice) === -1) {
+            // Jika 'newInvoice' belum ada dalam array, tambahkan ke dalam array 'invoices'
+            invoices.push(newInvoice);
+
+            // Simpan kembali array 'invoices' ke local storage
+            localStorage.setItem("invoices", JSON.stringify(invoices));
+        } else {
+            // Jika 'newInvoice' sudah ada dalam array, berikan pesan kesalahan atau lakukan tindakan lainnya
+            console.log("Invoice sudah ada dalam array invoices.");
+        }
+        console.log(invoices)
     </script>
 
     @yield('js')

@@ -64,7 +64,18 @@
                         <i class="flaticon2-layers icon-lg"></i>
                     </a>
                 </li>
+                <!--end::Item-->
 
+                <!--begin::Item-->
+                <li class="nav-item mb-5" data-toggle="tooltip" data-placement="right" data-container="body"
+                    data-boundary="window" title="Banner">
+                    <a href="{{ route('getBanner') }}"
+                        class="nav-link btn btn-icon btn-clean btn-icon-white btn-lg {{ set_active('getBanner') }}"
+                        role="tab">
+                        <i class="flaticon2-image-file
+                        icon-lg"></i>
+                    </a>
+                </li>
                 <!--end::Item-->
 
                 <!--begin::Item-->
@@ -76,7 +87,6 @@
                         <i class="flaticon2-user-1 icon-lg"></i>
                     </a>
                 </li>
-
                 <!--end::Item-->
 
                 <!--begin::Item-->
