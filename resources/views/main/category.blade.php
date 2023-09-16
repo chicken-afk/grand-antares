@@ -206,7 +206,8 @@
                                                                                 <!--begin::Form-->
                                                                                 <form
                                                                                     action="{{ route('updateCategory') }}"
-                                                                                    method="POST">
+                                                                                    method="POST"
+                                                                                    enctype="multipart/form-data">
                                                                                     @csrf
                                                                                     <input type="hidden" name="id"
                                                                                         value="{{ $value->id }}">
@@ -228,6 +229,12 @@
                                                                                                     "Minuman",
                                                                                                     "Desert"</span>
                                                                                             </div>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label
+                                                                                                for="">Banner</label>
+                                                                                            <input type="file"
+                                                                                                name="category_image">
                                                                                         </div>
                                                                                         <!--end::Form-->
                                                                                     </div>

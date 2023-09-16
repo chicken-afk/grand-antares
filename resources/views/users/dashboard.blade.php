@@ -103,7 +103,7 @@
                                 <div class="col text-center">
                                     <button name="subCategoryId" data-category-id="{{ $value->id }}"
                                         data-menu-key="menu{{ $key }}" onclick="changeDataProduct(this)"
-                                        data-value="semua" class="btn1">Semua</button>
+                                        data-value="semua" class="btn1">Semua(All)</button>
                                 </div>
                                 @foreach ($subCategories as $sub)
                                     <div class="col text-center">

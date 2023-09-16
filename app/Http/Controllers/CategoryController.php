@@ -101,12 +101,26 @@ class CategoryController extends Controller
             return Redirect::back()->withErrors($validator);
         }
 
+        if ($request->file('category_image')) {
+            $imageName = "";
+            if ($request->file('category_image')) {
+                $image = $request->file('category_image');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->storeAs('public/category', $imageName); // Upload the image to the storage link        }
+                $imageName = "/storage/category/" . $imageName;
+                $insert = DB::table('categories')->where('id', $request->id)->update([
+                    'category_image' => $imageName,
+                ]);
+            }
+        }
+
         // Insert to DB
         $insert = DB::table('categories')->where('id', $request->id)->update([
             'category_name' => $request->category_name,
             'user_id' => Auth::id(),
             'updated_at' => now()
         ]);
+
 
         if ($insert) {
             Alert::success('Success', 'Berhasil Mengubah Data');
