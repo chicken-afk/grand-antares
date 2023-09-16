@@ -27,7 +27,9 @@
                                 @csrf
                                 <div class="card-toolbar d-flex justify-content-end align-items-right text-right">
                                     {{-- <p class="text-dark text-weight-bolder font-size-sm">Tambah Whatsapp CS</p> --}}
-                                    <input type="text" name="whatsapp" class="form-control flex-grow-1 mr-2"
+                                    <input type="text" name="name" class="form-control flex-grow-1 mr-2 my-2"
+                                        placeholder="Nama" required>
+                                    <input type="text" name="whatsapp" class="form-control flex-grow-1 mr-2 my-2"
                                         placeholder="Masukan Nomor Whatsapp CS" required>
                                     <button type="submit" class="btn btn-sm btn-primary my-2">Simpan</button>
                                 </div>
@@ -41,6 +43,7 @@
                                 class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline">
                                 <thead>
                                     <th>No</th>
+                                    <th>Nama</th>
                                     <th>Nomor Whatsapp</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -49,6 +52,7 @@
                                     @forelse ($row['customer_services'] as $key => $cs)
                                         <tr>
                                             <td class="text-dark"><span>{{ $key + 1 }}</span></td>
+                                            <td class="text-dark"><span>{{ $cs->name }}</span></td>
                                             <td class="text-dark"><span>{{ $cs->whatsapp }}</span></td>
                                             <td class="text-dark">
                                                 <span>{{ $cs->is_active == 1 ? 'Aktif' : 'Tidak Aktif' }}</span>

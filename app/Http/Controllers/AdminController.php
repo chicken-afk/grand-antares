@@ -94,7 +94,7 @@ class AdminController extends Controller
     public function saveWhatsapp(Request $request)
     {
         $nomorHp = $this->formatNomorHP($request->whatsapp);
-        Csnumber::create(['whatsapp' => $nomorHp]);
+        Csnumber::create(['name' => $request->name, 'whatsapp' => $nomorHp]);
 
         alert('success', 'Berhasil Menyimpan Whatsapp', 'success');
         return redirect()->back();

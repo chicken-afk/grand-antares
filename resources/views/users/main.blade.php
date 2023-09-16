@@ -189,6 +189,35 @@
 
     <footer>
         <div class="social-media">
+            <p onclick="showModalKritik()" style="text-align: center; margin-bottom : 6px; text-decoration : underline"
+                class="text-center">Kritik
+                dan saran</p>
+            {{-- Modal --}}
+            <div class="modal fade" id="modalKritik" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content p-4" id="modalContent">
+
+                        <form action="{{ route('storeKritik') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="order_id" value="">
+                            <div class="form-group fv-plugins-icon-container has-success">
+                                <label style="font-size:0.7rem">Masukan Kritik dan Saran</label>
+                                <textarea id="inputSearch" type="text" class="form-control" name="kritik" autofocus required> </textarea>
+                            </div>
+                            <button type="submit" class="button btn btn-sm btn-warning mt-1">
+                                Kirim
+                            </button>
+                        </form>
+                    </div>
+                    {{-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    onclick="closeModalDetail()">Close</button> --}}
+
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                    {{-- </div> --}}
+                </div>
+            </div>
             <div class="rounded-social-buttons">
                 <a class="social-button facebook" href="https://www.facebook.com/" target="_blank"><i
                         class="fab fa-facebook-f"></i></a>
@@ -218,6 +247,11 @@
     </script> --}}
     {{-- <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showModalKritik() {
+            $('#modalKritik').modal('show');
+        }
+    </script>
 
     @yield('js')
 </body>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OutletController;
@@ -134,6 +135,12 @@ Route::middleware(['login'])->group(function () {
     Route::get('/statistic-omset-day', [StatisticController::class, 'statisticOmsetDat'])->name('statisticOmsetDat');
 
     Route::get('/admin/kritik', [KritikController::class, 'indexAdmin'])->name('kritikPageAdmin');
+
+    Route::get('banners', [BannerController::class, 'index'])->name('getBanner');
+    Route::get('banners/add', [BannerController::class, 'add'])->name('addBanner');
+    Route::post('banners/add', [BannerController::class, 'store'])->name('storeBanner');
+    Route::get('banners/delete/{id}', [BannerController::class, 'delete'])->name('deleteBanner');
+    Route::get('banners/change-status/{id}', [BannerController::class, 'updateStatus'])->name('changeBannerStatus');
 });
 
 /**
@@ -142,8 +149,10 @@ Route::middleware(['login'])->group(function () {
 Route::middleware(['limitedIp'])->group(function () {
     Route::get('dashboard-user/{code}', [UserController::class, 'dashboard'])->name('dashboardUser');
     Route::get('/shopping/{code}', [UserController::class, 'view'])->name('userPage');
+    Route::get('/shopping-banner/{code}', [UserController::class, 'viewBanner'])->name('userPageBanner');
     Route::get('/carts/{code}', [UserController::class, 'carts'])->name('cartPage');
     Route::get('/invoice/{code}', [UserController::class, 'invoice'])->name('invoice');
+    Route::get('cek-invoices', [UserController::class, 'checkInvoices']);
 });
 Route::get('/invoice-search', [InvoiceController::class, 'search'])->name('searchInvoice');
 Route::post('/kritik', [KritikController::class, 'store'])->name('storeKritik');

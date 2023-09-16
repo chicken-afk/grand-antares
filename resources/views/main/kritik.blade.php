@@ -27,7 +27,6 @@
                     <table class="table table-head-custom">
                         <thead>
                             <tr>
-                                <th class="p-0 min-w-200px">Nama</th>
                                 <th class="p-0 min-w-200px">Kritik dan Saran</th>
                                 <th class="p-0 min-w-120px">Tanggal</th>
                             </tr>
@@ -35,9 +34,6 @@
                         <tbody>
                             @forelse ($row['datas'] as $val)
                                 <tr>
-                                    <td>
-                                        {{ $val->order->name }}
-                                    </td>
                                     <td>{{ $val->kritik }}</td>
                                     <td>{{ date('H:i:s m-d-Y', strtotime($val->created_at)) }}</td>
                                 </tr>

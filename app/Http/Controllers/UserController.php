@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PDF;
+use App\Models\Banner;
+use App\Models\BannerProduct;
+use App\Models\Order;
 
 class UserController extends Controller
 {
@@ -40,7 +43,7 @@ class UserController extends Controller
         $row['categories'] = DB::table('categories')->where('is_active', 1)->get();
         $row['code'] = $code;
         $row['banners'] = Product::where('is_promo', 1)->whereNotNull('banner_promo')->select('id', 'uuid', 'banner_promo', 'active_product_name')->get();
-        // dd($row['banners']);
+        $row['slide_banners'] = Banner::active()->withCount('products')->get();
         $row['customer_services'] = Csnumber::where('is_active', 1)->get();
         return view('users.tamu', compact('row'));
     }
@@ -65,7 +68,13 @@ class UserController extends Controller
                     })
                     ->where('active_products.category_id', $value->id)
                     ->select('active_products.*', 'active_products.price_display_restaurant as price_display', 'price_promo_restaurant as price_promo');
-                $q = $request->has('category_id') ? ($request->category_id == 'promo' ? $q->where('active_products.is_promo', 1) : $q) : $q;
+                if ($request->has('banner_id')) {
+                    $productIdList = BannerProduct::where('banner_id', $request->banner_id)->pluck('product_id');
+                    $q = $q->whereIn('active_products.id', $productIdList);
+                    $row['banner_name'] = Banner::find($request->banner_id)->name;
+                } else {
+                    $q = $request->has('category_id') ? ($request->category_id == 'promo' ? $q->where('active_products.is_promo', 1) : $q) : $q;
+                }
                 $row['categories'][$key]->products = $q->get();
                 foreach ($row['categories'][$key]->products as $k => $v) {
                     $row['categories'][$key]->products[$k]->toppings = DB::table('toppings')->where('master_product_id', $v->id)->where('deleted_at', null)->select('toppings.*', 'toppings.topping_price_restaurant as topping_price')->get();
@@ -82,7 +91,13 @@ class UserController extends Controller
                     })
                     ->where('active_products.category_id', $value->id)
                     ->select('active_products.*');
-                $q = $request->has('category_id') ? ($request->category_id == 'promo' ? $q->where('active_products.is_promo', 1) : $q) : $q;
+                if ($request->has('banner_id')) {
+                    $productIdList = BannerProduct::where('banner_id', $request->banner_id)->pluck('product_id');
+                    $q = $q->whereIn('active_products.id', $productIdList);
+                    $row['banner_name'] = Banner::find($request->banner_id)->name;
+                } else {
+                    $q = $request->has('category_id') ? ($request->category_id == 'promo' ? $q->where('active_products.is_promo', 1) : $q) : $q;
+                }
                 $row['categories'][$key]->products = $q->get();
                 foreach ($row['categories'][$key]->products as $k => $v) {
                     $row['categories'][$key]->products[$k]->toppings = DB::table('toppings')->where('master_product_id', $v->id)->where('deleted_at', null)->get();
@@ -95,7 +110,13 @@ class UserController extends Controller
         $row['cat'] = DB::table('categories')->where('is_active', 1)->whereNull('deleted_at')->get();
         $row['code'] = $code;
         $row['customer_services'] = Csnumber::where('is_active', 1)->get();
+        $row['banners'] = Banner::active()->whereHas('products')->get();
         return view('users.dashboard', compact('row'));
+    }
+
+    public function viewBanner(Request $request)
+    {
+        dd('sinii');
     }
 
     public function carts($code)
@@ -342,5 +363,14 @@ class UserController extends Controller
 
         $wifi = Ipaddress::where('is_active', 1)->get();
         return view('users.wifi', compact('wifi', 'row'));
+    }
+
+    public function checkInvoices(Request $request)
+    {
+        $invoice = Order::where('invoice_number', $request->invoices)->first();
+        // dd($invoice, $request->invoice);
+        if (!$invoice) abort(404);
+        $code = $invoice->type == 'kamar' ? config('appsetting.room_code') : config('appsetting.restaurant_code');
+        return redirect()->route('invoice', ["code" => $code, "invoice" => $invoice->invoice_number]);
     }
 }

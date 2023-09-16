@@ -75,7 +75,10 @@
                         text = `Pesanan ${invoice} selesai diproses`
                     }
                     document.getElementById("alertSearch").innerHTML =
-                        `<p style="font-size: 0.75rem" class="text-bold alert alert-warning mt-2">${text}</p>`;
+                        `<p style="font-size: 0.75rem" class="text-bold alert alert-warning mt-2">${text}
+                            <a href="/cek-invoices?invoices=${invoice}">Lihat pesanan<a>
+                            </p>
+                        `;
 
                     // document.getElementById("searchContent").innerHTML = html;
                 },
@@ -140,15 +143,25 @@
             }
         }
 
-        setInterval(nextSlide, 10000); // Ganti slide setiap 5 detik
+        setInterval(nextSlide, 5000); // Ganti slide setiap 5 detik
 
         showSlide(currentSlide); // Tampilkan slide pertama saat halaman dimuat
 
         // Menambahkan event listeners untuk mendeteksi swipe
-        const sliderElement = document.querySelector('.slider');
-        sliderElement.addEventListener('touchstart', handleTouchStart);
-        sliderElement.addEventListener('touchmove', handleTouchMove);
-        sliderElement.addEventListener('touchend', handleTouchEnd);
+        // const sliderElement = document.querySelector('.slider');
+        // sliderElement.addEventListener('touchstart', handleTouchStart);
+        // sliderElement.addEventListener('touchmove', handleTouchMove);
+        // sliderElement.addEventListener('touchend', handleTouchEnd);
+    </script>
+    <script>
+        var invoices = JSON.parse(localStorage.getItem("invoices") || "[]");
+        var listHtml = "";
+        invoices.forEach(element => {
+            listHtml += `
+            <p class="mt-1 mb-1 ml-3" style="font-size: 0.6rem;font-weight:600">${element}</p>
+            `;
+        });
+        document.getElementById('listInvoices').innerHTML = listHtml;
     </script>
 @endsection
 
@@ -156,18 +169,36 @@
     {{-- banner Promo --}}
     <div class="banner">
         <div class="slider">
+            @php $keyBanner = 0; @endphp
+            @foreach ($row['slide_banners'] as $key => $banner)
+                @if ($banner->products_count == 0)
+                    <a href="#" style="text-decoration: none" href="">
+                        <img id="img-{{ $keyBanner }}" src="{{ asset($banner->banner_image) }}"
+                            alt="Image {{ $keyBanner }}" />
+                    </a>
+                @else
+                    <a href="{{ route('userPage', ['code' => $row['code'], 'banner_id' => $banner->id, 'banner' => 'true']) }}"
+                        style="text-decoration: none" href="">
+                        <img id="img-{{ $keyBanner }}" src="{{ asset($banner->banner_image) }}"
+                            alt="Image {{ $keyBanner }}" />
+                    </a>
+                @endif
+                @php $keyBanner++; @endphp
+            @endforeach
             @foreach ($row['banners'] as $key => $banner)
                 <a href="{{ route('userPage', ['code' => $row['code'], 'category_id' => 'promo', 'is_promo_product' => true, 'promo_product_id' => $banner->uuid]) }}"
                     style="text-decoration: none" href="">
-                    <img id="img-{{ $key }}" src="{{ asset($banner->banner_promo) }}"
-                        alt="Image {{ $key }}" />
+                    <img id="img-{{ $keyBanner }}" src="{{ asset($banner->banner_promo) }}"
+                        alt="Image {{ $keyBanner }}" />
                 </a>
+                @php $keyBanner++; @endphp
             @endforeach
         </div>
         <div class="navigation-button">
-            @foreach ($row['banners'] as $key => $banner)
-                <span class="dot active" onclick="changeSlide({{ $key }})"></span>
-            @endforeach
+            @php $ind = 0; @endphp
+            @for ($keyBanner; $keyBanner > $ind; $ind++)
+                <span class="dot active" onclick="changeSlide({{ $ind }})"></span>
+            @endfor
         </div>
     </div>
     {{-- end banner promo --}}
@@ -223,9 +254,13 @@
                 <div id="alertSearch">
 
                 </div>
-
+                <p class="mt-1 mb-1" style="font-size: 0.75rem;font-weight:600">Daftar kode pesanan:</p>
+                <div id="listInvoices" class="ml-2" style="margin-left: 4px">
+                    <p class="mt-1 mb-1 ml-3" style="font-size: 0.6rem;font-weight:600">INVD38</p>
+                </div>
             </div>
         </div>
+
     </div>
     {{-- Floating Button --}}
     <a data-bs-toggle="modal" data-bs-target="#whatsappModal" class="float-whatsapp">
@@ -243,7 +278,10 @@
                 <div class="modal-body">
                     @forelse ($row['customer_services'] as $cs)
                         <div class="row">
-                            <div class="col-12 text-center">
+                            <div class="col-5 text-center">
+                                <span>{{ $cs->name }} : </span>
+                            </div>
+                            <div class="col-7">
                                 <a target="_blank" class="text-dark-75"
                                     href="https://wa.me/{{ $cs->whatsapp }}">+{{ $cs->whatsapp }}</a>
                             </div>

@@ -55,7 +55,7 @@ class OrderRepository implements OrderInterface
         }
         if (Auth::user()->role_id == 3) {
             $invoice = DB::table('invoices')->where('invoices.company_id', Auth::user()->company_id)
-                ->select('invoices.id', 'invoices.payment_method', 'invoices.type', 'invoices.keterangan', 'invoice_users.invoice_pdf', 'invoices.invoice_number', 'invoices.payment_charge', 'invoices.name', 'invoices.nomor_kamar', 'invoices.order_at', 'invoices.payment_status', 'invoices.payment_at', 'invoices.order_status')
+                ->select('invoices.id', 'invoices.whatsapp', 'invoices.payment_method', 'invoices.type', 'invoices.keterangan', 'invoice_users.invoice_pdf', 'invoices.invoice_number', 'invoices.payment_charge', 'invoices.name', 'invoices.nomor_kamar', 'invoices.order_at', 'invoices.payment_status', 'invoices.payment_at', 'invoices.order_status')
                 ->orderByDesc('invoices.id')
                 ->whereIn('invoices.payment_status', $payment_status)
                 ->where('invoice_outlets.outlet_id', Auth::user()->outlet_id)
@@ -71,7 +71,7 @@ class OrderRepository implements OrderInterface
                 ->get();
         } else {
             $invoice = DB::table('invoices')->where('company_id', Auth::user()->company_id)
-                ->select('invoices.id', 'invoices.payment_method', 'invoices.type', 'invoices.keterangan', 'invoice_users.invoice_pdf', 'invoices.invoice_number', 'invoices.payment_charge', 'invoices.name', 'invoices.nomor_kamar', 'invoices.order_at', 'invoices.payment_status', 'invoices.payment_at', 'invoices.order_status')
+                ->select('invoices.id', 'invoices.whatsapp', 'invoices.payment_method', 'invoices.type', 'invoices.keterangan', 'invoice_users.invoice_pdf', 'invoices.invoice_number', 'invoices.payment_charge', 'invoices.name', 'invoices.nomor_kamar', 'invoices.order_at', 'invoices.payment_status', 'invoices.payment_at', 'invoices.order_status')
                 ->orderByDesc('invoices.id')
                 ->whereIn('invoices.payment_status', $payment_status)
                 ->leftJoin('invoice_user_invoices', 'invoice_user_invoices.invoice_number', 'invoices.invoice_number')

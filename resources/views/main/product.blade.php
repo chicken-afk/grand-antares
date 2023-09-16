@@ -2,9 +2,7 @@
 @section('script')
     <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
-        $('#productTable').DataTable({
-            order: [11, 'desc']
-        });
+        $('#productTable').DataTable();
     </script>
 @endsection
 @section('header-name')
