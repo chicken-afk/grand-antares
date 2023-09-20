@@ -103,7 +103,7 @@ Route::middleware(['login'])->group(function () {
     Route::post('/payment-table', [OrderController::class, 'paymentTable'])->name('paymentTableApi');
     Route::get('/orders-export', [ExportOrderController::class, 'export'])->name('exportOrder');
     Route::post('/change-status-order', [OrderController::class, 'editStatus'])->name('changeStatusOrder');
-
+    Route::get('change-notif-order/{id}', [OrderController::class, 'changeNotif']);
 
     /**Live Order Data */
     Route::get('/live-order', [OrderController::class, 'liveOrder'])->name('liveOrder');

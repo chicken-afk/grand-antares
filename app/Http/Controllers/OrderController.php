@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Repositories\Repository\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -190,5 +191,10 @@ class OrderController extends Controller
         //     'message' => 'Pembayaran Berhasil',
         //     'invoice_link' => "/storage/invoices/$name.pdf"
         // ]);
+    }
+
+    public function changeNotif($id)
+    {
+        DB::table('invoices')->where("id", $id)->update(['is_notif' => 1]);
     }
 }

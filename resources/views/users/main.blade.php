@@ -230,6 +230,8 @@
                 <a class="social-button instagram" href="https://www.instagram.com/" target="_blank"><i
                         class="fab fa-instagram"></i></a>
             </div>
+            <p style="text-align: center; margin-bottom : 20px; font-size:0.6rem" class="text-center">
+                @CopyrightAntaresGroupHotel</p>
         </div>
     </footer>
 
@@ -252,6 +254,11 @@
             $('#modalKritik').modal('show');
         }
     </script>
+    @if (\Request::has('scan') && \Request::get('scan') == 'true')
+        <script>
+            localStorage.removeItem('carts');
+        </script>
+    @endif
 
     @yield('js')
 </body>
